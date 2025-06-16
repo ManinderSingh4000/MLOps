@@ -1,0 +1,1 @@
+import{j as s}from"./@radix-Cdvw4jJ8.js";import{bo as c,h as i}from"./index-BFqbGSck.js";import{S as e}from"./check-B9QMTa3f.js";function n({tickClasses:r,...o}){return s.jsx(c,{...o,children:s.jsx(e,{className:i("h-4 w-4 fill-success-300",r)})})}export{n as T};

@@ -1,0 +1,1 @@
+import{j as r}from"./@radix-Cdvw4jJ8.js";import{F as s}from"./Wizard-Dg8Pmn5A.js";import{C as e}from"./StackName-ojLC6xdl.js";function n({children:o,displayCancel:t=!0}){return r.jsxs(s,{children:[t&&r.jsx(e,{}),o]})}export{n as S};

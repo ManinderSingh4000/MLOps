@@ -17,7 +17,10 @@ def train_pipeline(data_path: str) :
         logging.info("Data cleaning completed successfully.")
 
         # Step 3: Model Training
-        model = model_train(X_train=x_train, y_train=y_train, X_test=x_test, y_test=y_test)
+        # Provide the required config argument to model_train
+        from steps.Model_Train import ModelNameConfig  # Make sure ModelNameConfig is imported
+        config = ModelNameConfig()  # Initialize with required parameters if any, e.g., ModelNameConfig(param1=..., param2=...)
+        model = model_train(X_train=x_train, y_train=y_train, X_test=x_test, y_test=y_test, config=config)
         logging.info("Model training completed successfully.")
 
         r2_score, rmse_score = evaluate_model(X_test=x_test, y_test=y_test, model=model)

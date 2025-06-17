@@ -1,6 +1,5 @@
-from zenml.config import BaseStepConfig # type: ignore
+from pydantic import BaseModel
 
-# class MyConfig:
-#     def __init__(self):
-#         self.model_name = "LinearRegression"
-        
+class ModelNameConfig(BaseModel):
+    model_name: str = "LinearRegressionModel"
+    # fine_tuning: bool = False

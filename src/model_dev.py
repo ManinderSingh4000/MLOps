@@ -18,7 +18,7 @@ class Model(ABC):
 
 
 class LinearRegressionModel(Model):
-    def train(self, X_train: Any, y_train: Any, **kwargs):
+    def train(self, X_train, y_train, **kwargs):
         """
         Train the linear regression model with the provided data.
         

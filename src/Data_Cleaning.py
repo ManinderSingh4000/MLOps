@@ -1,8 +1,8 @@
 import logging 
-from zenml import step
 import pandas as pd
-from abc import ABC, abstractmethod
-from typing import Any, Dict, Union, Tuple
+from abc import abstractmethod
+from typing import Any, Tuple
+from sklearn.preprocessing import LabelEncoder
 from sklearn.model_selection import train_test_split
 
 class DataStrategy:
@@ -33,24 +33,43 @@ class DataPreProcessingStrategy(DataStrategy):
         try:
             data.drop(columns=
                     [
-                        'review_comment_message',
+                        'stories',
+                        'mainroad',
+                        'parking',
+                        'prefarea'
 
                     ]
-                    ,axis =1)
-            
-            data['product_weight_g'] = data['product_weight_g'].fillna(0)
-            data['product_length_cm'] = data['product_length_cm'].fillna(0) 
-            data['product_height_cm'] = data['product_height_cm'].fillna(0)
-            data['product_width_cm'] = data['product_width_cm'].fillna(0)
-            data['review_comment_message'] = data['review_comment_message'].fillna('')
-            # data['review_comment_title'] = data['review_comment_title'].fillna('')
-
+                    ,axis =1 , inplace=True)
+            data = data.dropna()
+            data = data.drop_duplicates()
+            data = data.reset_index(drop=True)
             data = data.select_dtypes(include=['number'])
             col_to_drop = data.columns[data.isnull().mean() > 0.5]
             data = data.drop(columns=col_to_drop, axis=1) 
             return data
         except Exception as e:
             logging.error(f"Error in DataPreProcessingStrategy: {e}")
+            raise e
+        
+class DataEncodingStrategy(DataStrategy):
+    def handle_data(self, data: pd.DataFrame) -> pd.DataFrame:
+        """
+        Encode categorical variables in the data.
+        
+        Args:
+            data (pd.DataFrame): DataFrame containing the data to be encoded.
+        
+        Returns:
+            pd.DataFrame: Encoded DataFrame.
+        """
+        try:
+            encoder = LabelEncoder()
+
+            for i in data.select_dtypes(include=['object']).columns:
+                data[i] = encoder.fit_transform(data[i])
+            return data
+        except Exception as e:
+            logging.error(f"Error in DataEncodingStrategy: {e}")
             raise e
 
 
@@ -66,8 +85,8 @@ class DataDivideStrategy(DataStrategy):
             Tuple[pd.DataFrame, pd.DataFrame, pd.Series, pd.Series]: Training and testing sets for features and target.
         """
         try:
-            X = data.drop(["review_score"], axis=1)
-            y = data["review_score"]
+            X = data.drop(["price"], axis=1)
+            y = data[["price"]]
             x_train, x_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
             return x_train, x_test, y_train, y_test
         
@@ -76,7 +95,7 @@ class DataDivideStrategy(DataStrategy):
             raise e
 
 class DataCleaning:
-    def __init__(self , data ,  strategy: DataStrategy):
+    def __init__(self , data : pd.DataFrame ,  strategy: DataStrategy):
 
         """
         Initialize the DataCleaning class with a specific strategy.
@@ -101,8 +120,26 @@ class DataCleaning:
             logging.error(f"Error in DataCleaning: {e}")
             raise e
         
-if __name__ == "__main__":
-    data = pd.read_csv("C:\\Users\\python\\OneDrive\\Desktop\\MLOps\\Data\\olist_customers_dataset.csv")
-    data_cleaning = DataCleaning(data, DataPreProcessingStrategy())
-    data_cleaning.handle_data()
+# if __name__ == "__main__":
+#     data = pd.read_csv("C:\\Users\\python\\OneDrive\\Desktop\\MLOps\\Data\\Housing.csv")
+#     data_cleaning = DataCleaning(data, DataPreProcessingStrategy())
+#     data_cleaning.handle_data()
+
+#     print("\nData cleaned successfully.\n")
+#     print(data_cleaning.data.head())
+
+#     data_encoding = DataCleaning(data_cleaning.data, DataEncodingStrategy())
+#     data_cleaning.data = data_encoding.handle_data()
+#     print("\nData encoded successfully.")
+#     print(data_cleaning.data.head())
+
+
+#     data_divide = DataCleaning(data_cleaning.data, DataDivideStrategy())
+#     x_train, x_test, y_train, y_test = data_divide.handle_data()
+
+#     print("\nData divided successfully.")
+#     print(f"x_train shape: {x_train.shape}")
+#     print(f"x_test shape: {x_test.shape}")
+#     print(f"y_train shape: {y_train.shape}")
+#     print(f"y_test shape: {y_test.shape}")
 

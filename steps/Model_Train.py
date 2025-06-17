@@ -9,14 +9,14 @@ import os
 project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
 sys.path.append(project_root)
 from src.model_dev import LinearRegressionModel  # type: ignore # Updated import to absolute path
-from steps.config import ModelNameConfig
 
+
+@step
 def model_train(
     X_train: pd.DataFrame,
     y_train: pd.Series,
     X_test: pd.DataFrame,
     y_test: pd.Series,
-    config: ModelNameConfig
 ):
     """
     Step to train a linear regression model on the provided DataFrame.
@@ -29,14 +29,13 @@ def model_train(
     """
     
     try:
-        model = None
-        if config.model_name == "LinearRegressionModel":
-            model = LinearRegressionModel()
-            trained_model = model.train(X_train, y_train)
-            return trained_model
-        else:
-            raise ValueError(f"Unsupported model name: {config.model_name}.")
+        logging.info("Starting model training...")
+        model = LinearRegressionModel()
+        trained_model = model.train(X_train, y_train)
+        return trained_model
+    
         
     except Exception as e:
         logging.error(f"Error during model training: {e}")
         raise e
+    

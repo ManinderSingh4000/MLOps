@@ -1,5 +1,7 @@
-from pydantic import BaseModel
+from dataclasses import dataclass
 
-class ModelNameConfig(BaseModel):
+@dataclass
+class ModelNameConfig:
     model_name: str = "LinearRegressionModel"
-    # fine_tuning: bool = False
+
+

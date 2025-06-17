@@ -1,7 +1,7 @@
 import logging 
 import pandas as pd
 from zenml import step
-from typing import Any, Tuple
+from typing import Tuple
 from typing_extensions import Annotated 
 import sys
 import os
@@ -81,5 +81,4 @@ def clean_data(df: pd.DataFrame) -> Tuple[
     except Exception as e:
         logging.error(f"Error occurred in data cleaning step: {e}")
         raise e 
-    return x_train, x_test, y_train, y_test
 

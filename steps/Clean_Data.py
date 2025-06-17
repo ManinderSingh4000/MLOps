@@ -57,7 +57,7 @@ def clean_data(df: pd.DataFrame) -> Tuple[
         2    0
         3    1
         Name: label, dtype: int64
-        
+
     """
 
 
@@ -76,6 +76,7 @@ def clean_data(df: pd.DataFrame) -> Tuple[
         data_cleaning = DataCleaning(processed_data, dividestrategy)
         x_train, x_test, y_train, y_test = data_cleaning.handle_data()
         logging.info("Data cleaned and divided successfully.")
+        return x_train, x_test, y_train, y_test
     
     except Exception as e:
         logging.error(f"Error occurred in data cleaning step: {e}")

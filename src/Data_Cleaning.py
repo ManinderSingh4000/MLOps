@@ -86,7 +86,7 @@ class DataDivideStrategy(DataStrategy):
         """
         try:
             X = data.drop(["price"], axis=1)
-            y = data[["price"]]
+            y = data["price"]
             x_train, x_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
             return x_train, x_test, y_train, y_test
         
